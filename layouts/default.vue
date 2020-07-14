@@ -49,7 +49,12 @@ input[type=checkbox]::before {
     transform: translate(50%, 50%);
     opacity: 0;
     transition: .1s ease-in;
+    outline: none
 }
+input[type=checkbox]:focus {
+    outline: none
+}
+
 input[type=checkbox]:checked::before {
     opacity: 1;
 }

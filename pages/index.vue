@@ -193,6 +193,7 @@ export default {
   methods: {
     updateProductsToDelete (val) {
       this.productsToDelete = val
+      console.log(this.productsToDelete)
     },
     changeColumns (col) {
       console.log(col, this.columnsToView)

@@ -20,7 +20,13 @@
           <td class="tData__product__checkbox">
             <input type="checkbox" :checked="checkToDelete(product.id)" @click="addProductToDelete(product.id)">
           </td>
-          <td v-for="col in columnsToView" :key="col.key" :style="`flex-basis: ${950/columnsToView.length}px`">
+          <td
+            v-for="col in columnsToView"
+            :key="col.key"
+            :style="col.key==='product' & showDelete.includes(product.id)
+              ? `font-weight: 600;
+              flex-basis: ${980/columnsToView.length}px` : `flex-basis: ${980/columnsToView.length}px`"
+          >
             {{ product[col.key] }}
           </td>
           <td class="tData__product__deleteTd">
@@ -95,8 +101,7 @@ export default {
       checkedAllProductOnPage: false,
       showDelete: [],
       showDeletePopup: [],
-      productPage: this.products.slice((parseInt(this.page) - 1) * parseInt(this.perPage), parseInt(this.page) * parseInt(this.perPage)),
-      errorLocal: this.error
+      productPage: this.products.slice((parseInt(this.page) - 1) * parseInt(this.perPage), parseInt(this.page) * parseInt(this.perPage))
     }
   },
   methods: {
@@ -106,14 +111,17 @@ export default {
       this.showDeletePopup.push(product)
     },
     checkToDelete (item) {
-      return this.productsToDelete.includes(item) || this.checkedAllProductOnPage
+      console.log(item, this.productsToDelete)
+      return this.productsToDelete.includes(item)
     },
     deleteAll () {
       const productsOnPage = this.products.slice((parseInt(this.page) - 1) * parseInt(this.perPage), parseInt(this.page) * parseInt(this.perPage))
       const idsProductsToDelete = productsOnPage.map(item => item.id)
-      console.log('deleteAll', this.productsToDelete.length === idsProductsToDelete.length, this.productsToDelete.length, idsProductsToDelete.length)
+      console.log('deleteAll', this.testAllChecked(), this.productsToDelete.length, idsProductsToDelete.length)
       if (this.testAllChecked()) {
-        const productsToDelete = this.productsToDelete.filter(item => this.productPage.includes(item))
+        console.log(this.productsToDelete, productsOnPage)
+        const productsToDelete = this.productsToDelete.filter(item => !idsProductsToDelete.includes(item))
+        console.log(productsToDelete)
         this.$emit('update-product-to-delete', productsToDelete)
       } else {
         console.log(idsProductsToDelete)
